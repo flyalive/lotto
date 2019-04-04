@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <header name = "Access-Control-Allow-Origin" value = "*" />
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+<script src="lotto.js"></script>
+
+<!--<button id="start_ajax">서버와 통신시작</button>-->
+
+
+<div id="lottok">loading...</div>
+<script type="text/javascript">
+    function loadlot(a) {
+        lotpane = document.getElementById('lottok');
+        lotpane.innerHTML = '제 <span style="color: green;"><b>' +
+            a.gno + '</b></span>회 (' + a.gdate + ')<b><span style="color: red;">' +
+            a.nums + '</span> / <span style="color: blue;">' + a.bnum + '</span></b>';
+    }
+</script>
+<script type="text/javascript" src="http://lotto.kaisyu.com/api?method=get&callback=loadlot">
+</script>
+
+</body>
+</html>
