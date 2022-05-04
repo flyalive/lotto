@@ -2,70 +2,212 @@
 <html>
     <head>
         <meta charset="utf-8"/>
-            <title>kong의 로또번호 맞추기</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--모바일용 화면으로 적용하게 해줌-->
+<title>kong의 로또번호 맞추기</title>
     </head>
 
     <body>
-		<h3> 로또 번호 맞추기 (대박 나세요) </h3>
-		<script type="text/javascript">
-		// var result1 = Math.floor(Math.random() * 45) + 1;
-		// var result2 = Math.floor(Math.random() * 45) + 1;
-		// var result3 = Math.floor(Math.random() * 45) + 1;
-		// var result4 = Math.floor(Math.random() * 45) + 1;
-		// var result5 = Math.floor(Math.random() * 45) + 1;
-		// var result6 = Math.floor(Math.random() * 45) + 1;
+<h3> 로또 번호 맞추기 (대박 나세요) </h3>
 
-		// document.writeln(result1);
-		// document.writeln(result2);
-		// document.writeln(result3);
-		// document.writeln(result4);
-		// document.writeln(result5);
-		// document.writeln(result6);
+<script type="text/javascript"></script>
 
-    for(i=0; i<6; i++)
-    {
-      var i = Math.floor(Math.random() * 45) + 1;
+    <script src="lotto.js"></script>
 
-        {
-            document.writeln(i);
-            document.writeln(i);
-            document.writeln(i);
-            document.writeln(i);
-            document.writeln(i);
-            document.writeln(i);
-      }
-    }
-
-		</script>
+        <p><button id = "btn1">로또 1조 보여주기</button ></p>
+        <p><button id = "btn2">로또 2조 보여주기</button ></p> 
+        <p><button id = "btn3">로또 3조 보여주기</button ></p> 
+        <p><button id = "btn4">로또 4조 보여주기</button ></p> 
+        <p><button id = "btn5">로또 5조 보여주기</button ></p> 
 
 
-		<p>
-			<!-- <p>태그의 내용은 디스커스(Disqus)를 삽입하는 내용입니다. -->
-		<div id="disqus_thread"></div>
-		<script>
+    <script>
+/** 1조 **/
+        document.getElementById('btn1').addEventListener('click', function() {
+            document.write(`이번주 1조 번호는 : `, numArr)
+        });
+/** 2조 **/
+        document.getElementById('btn2').addEventListener('click', function () {
 
-		/**
-		*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-		*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-		/*
-		var disqus_config = function () {
-		this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-		this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-		};
-		*/
-		(function() { // DON'T EDIT BELOW THIS LINE
-		var d = document, s = d.createElement('script');
-		s.src = 'https://backhoe-1.disqus.com/embed.js';
-		s.setAttribute('data-timestamp', +new Date());
-		(d.head || d.body).appendChild(s);
-		})();
-		</script>
+            document.write(`이번주 2조 번호는 : `, numArr, '<br\>'),
+            numArr = [];
+            for (let i=0; i<6; i++) {
+                let num = Math.floor(Math.random() * 45 + 1 );
 
-		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                for (let j in numArr) {
+                    if (num === numArr[j]){
+                    num = Math.floor(Math.random() * 45 )+ 1;
+                    }
+                };
 
-		</p>
+            numArr.push(num)
+            }
 
+            numArr.sort(function (a,b) {
+            return a-b;
+            })
+            document.write(`이번주 2조 번호는 : `, numArr)
+        })
+/** 3조 **/
+        document.getElementById('btn3').addEventListener('click', function () {
+            document.write(`이번주 3조 번호는 : `, numArr, '<br\>'),
 
-	</body>
+                numArr = [];
+                for (let i=0; i<6; i++) {
+                    let num = Math.floor(Math.random() * 45 + 1 );
+
+                    for (let j in numArr) {
+                        if (num === numArr[j]){
+                        num = Math.floor(Math.random() * 45 )+ 1;
+                        }
+                    };
+
+                numArr.push(num)
+                }
+
+                numArr.sort(function (a,b) {
+                return a-b;
+                })
+            document.write(`이번주 3조 번호는 : `, numArr,'<br/>');
+
+                numArr = [];
+                for (let i=0; i<6; i++) {
+                    let num = Math.floor(Math.random() * 45 + 1 );
+
+                    for (let j in numArr) {
+                        if (num === numArr[j]){
+                        num = Math.floor(Math.random() * 45 )+ 1;
+                        }
+                    };
+
+                numArr.push(num)
+                }
+
+                numArr.sort(function (a,b) {
+                return a-b;
+                })
+            document.write(`이번주 3조 번호는 : `, numArr)
+        })
+/** 4조 **/        
+        document.getElementById('btn4').addEventListener('click', function () {
+            document.write(`이번주 4조 1번호는 : `, numArr, '<br/>'),
+                numArr = [];
+                for (let i=0; i<6; i++) {
+                    let num = Math.floor(Math.random() * 45 + 1 );
+                    for (let j in numArr) {
+                        if (num === numArr[j]){
+                        num = Math.floor(Math.random() * 45 )+ 1;
+                        }
+                    };
+                numArr.push(num)
+                }
+                numArr.sort(function (a,b) {
+                return a-b;
+                })
+            document.write(`이번주 4조 2번호는 : `, numArr,'<br/>');
+                numArr = [];
+                for (let i=0; i<6; i++) {
+                    let num = Math.floor(Math.random() * 45 + 1 );
+                    for (let j in numArr) {
+                        if (num === numArr[j]){
+                        num = Math.floor(Math.random() * 45 )+ 1;
+                        }
+                    };
+                numArr.push(num)
+                }
+                numArr.sort(function (a,b) {
+                return a-b;
+                })
+            document.write(`이번주 4조 3번호는 : `, numArr, '<br/>');
+
+                numArr = [];
+                for (let i=0; i<6; i++) {
+                    let num = Math.floor(Math.random() * 45 + 1 );
+
+                    for (let j in numArr) {
+                        if (num === numArr[j]){
+                        num = Math.floor(Math.random() * 45 )+ 1;
+                        }
+                    };
+
+                numArr.push(num)
+                }
+
+                numArr.sort(function (a,b) {
+                return a-b;
+                })
+            document.write(`이번주 4조 4번호는 : `, numArr)
+        })
+/** 5조 **/
+        document.getElementById('btn5').addEventListener('click', function () {
+            document.write(`이번주 5-1조 번호는 : `, numArr, '<br/>'),
+                numArr = [];
+                for (let i=0; i<6; i++) {
+                    let num = Math.floor(Math.random() * 45 + 1 );
+                    for (let j in numArr) {
+                        if (num === numArr[j]){
+                        num = Math.floor(Math.random() * 45 )+ 1;
+                        }
+                    };
+                numArr.push(num)
+                }
+                numArr.sort(function (a,b) {
+                return a-b;
+                })
+            document.write(`이번주 5-2조 번호는 : `, numArr,'<br/>');
+
+                numArr = [];
+                for (let i=0; i<6; i++) {
+                    let num = Math.floor(Math.random() * 45 + 1 );
+                    for (let j in numArr) {
+                        if (num === numArr[j]){
+                        num = Math.floor(Math.random() * 45 )+ 1;
+                        }
+                    };
+                numArr.push(num)
+                }
+                numArr.sort(function (a,b) {
+                return a-b;
+                })
+            document.write(`이번주 5-3조 번호는 : `, numArr, '<br/>');
+                numArr = [];
+                for (let i=0; i<6; i++) {
+                    let num = Math.floor(Math.random() * 45 + 1 );
+
+                    for (let j in numArr) {
+                        if (num === numArr[j]){
+                        num = Math.floor(Math.random() * 45 )+ 1;
+                        }
+                    };
+
+                numArr.push(num)
+                }
+
+                numArr.sort(function (a,b) {
+                return a-b;
+                })
+            document.write(`이번주 5-4조 번호는 : `, numArr, '<br/>');
+
+                numArr = [];
+                for (let i=0; i<6; i++) {
+                    let num = Math.floor(Math.random() * 45 + 1 );
+
+                    for (let j in numArr) {
+                        if (num === numArr[j]){
+                        num = Math.floor(Math.random() * 45 )+ 1;
+                        }
+                    };
+
+                numArr.push(num)
+                }
+
+                numArr.sort(function (a,b) {
+                return a-b;
+                })   
+            document.write(`이번주 5-5조 번호는 : `, numArr)
+        });
+    </script>
+</body>
 
 </html>
+/** v2.1 1게임부터 5게임을 버튼으로 연결해서 노출되도록 했음 **/

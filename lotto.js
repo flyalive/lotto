@@ -1,38 +1,26 @@
+'use strict';
 
-$(document).ready(function()
-{
-    init();
-});
+let numArr = [];
 
-function init()
-{
-    // console.log("lotto")
-    // $.ajax({
-    //     url:'http://lotto.kaisyu.com/api?method=get&gno=850',
-    //     ataType : "jsonp",
-    //     jsonp : "callback",
-    //
-    //     success:function(data){
-    //         console.log(data);
-    //         //$('#time').append(data);
+for (let i=0; i<6; i++) {
+    let num = Math.floor(Math.random() * 45 + 1 );
 
-    // console.log("http://lotto.kaisyu.com/api?method=get&gno=850");
+    for (let j in numArr) {
+        if (num === numArr[j]){
+        num = Math.floor(Math.random() * 45 )+ 1;
+        }
+    };
+
+numArr.push(num)
+}
+
+numArr.sort(function (a,b) {
+return a-b;
+})
+
+document.write(`이번주의 메인 로또 추천번호는 : `, numArr);
 
 
 
 
-    $("#start_ajax").click(function(){
-        $.ajax({
-            type:"POST",
-            url:"http://lotto.kaisyu.com/api?method=get&gno=850",
-            data : {name : "홍길동"},
-            dataType : "xml",
-            success: function(xml){
-                console.log(xml);
-                },
-            error: function(xhr, status, error) {
-                alert(error);
-                }
-        });
-        });
-};
+
