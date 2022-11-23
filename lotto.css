@@ -1,0 +1,16 @@
+* {
+    margin: 0.3em;
+    padding: 0%;
+    box-sizing: content-box;
+    text-align: center; 
+}
+h3 {
+    background-color:coral;
+    color: powderblue;
+    text-align: center; 
+}
+.btnBox {
+    margin-top: 5px;
+    border: 0px;
+    padding: 5px;
+}

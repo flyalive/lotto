@@ -1,6 +1,6 @@
 'use strict';
 function lottoNum () {
-    let numArr = [];
+    const numArr = [];
 
     for (let i=0; i<6; i++) {
         let num = Math.floor(Math.random() * 45 + 1 );
@@ -21,6 +21,7 @@ function lottoNum () {
     return numArr;
 
 }
-lottoNum();
 
-document.write(`이번주의 메인 로또 추천번호는 : `, lottoNum());
+lottoNum();
+//console.log(lottoNum())
+
