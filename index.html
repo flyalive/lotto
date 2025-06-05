@@ -1,153 +1,167 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--모바일용 화면으로 적용하게 해줌-->
-    <link rel="stylesheet" href="lotto.css">
     <title>kong의 로또번호 맞추기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 25px;
+            background-color: #f5f5f5;
+        }   
+        h3  {
+            color: #333;   
+        }   
+        p { 
+            font-size: 18px;
+            color: #777;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .lotto-number {
+            font-weight: bold;
+            color: #e91e63;
+        }
+    </style>
 </head>
-<body>
-    <h3> 로또 번호 맞추기 (대박 나세요!!) </h3><br>
-
-    <script type="text/javascript"></script>
-    <script src="lotto.js"></script>
-
-    <!-- <script>document.write(`이번주의 메인 추천번호는 : `, lottoNum()); </script> -->
-
-    <div class="something">
-        <div class = 'btnBox'><button id = "btn1">로또 1조 보여주기</button></div> 
-        <div class = 'btnBox'><button id = "btn2">로또 2조 보여주기</button></div> 
-        <div class = 'btnBox'><button id = "btn3">로또 3조 보여주기</button></div> 
-        <div class = 'btnBox'><button id = "btn4">로또 4조 보여주기</button></div>
-        <div class = 'btnBox'><button id = "btn5">로또 5조 보여주기</button></div><br> 
-        <button id = "btn6"> 꿈에서 본 번호는 ? </button>
-    </div>
+<body>  
+    <h3>로또 번호 맞추기 (대박 나세요!!)</h3><br>
     
+    <div>
+        <ul id="lottoNumbersList">
+            <!-- 여기에 로또 번호가 삽입됩니다 -->
+        </ul>
+    </div>
+
+    <p>이 프로그램은 개인의 공부를 위해서 만들었으며, 영리목적으로 사용할 수 없습니다.</p>
+    <p>2024. 4. 7. 수정</p>
+    <p>2025. 4. 7. Perplexity, Claude, VScode로 수정</p>
+    <p>nanireu@gmail.com</p>
+
     <script>
-        let t1 = document.getElementById('btn1');
-        let t2 = document.getElementById('btn2');
-        let t3 = document.getElementById('btn3');
-        let t4 = document.getElementById('btn4');
-        let t5 = document.getElementById('btn5');
-        let t6 = document.getElementById('btn6');
-
-        const clickBtn = document.querySelector(".something")
-
-        function btn_listener(event) {
-            switch (event.target.id) {
-                case 'btn1':
-                    clickBtn.innerHTML = (`이번주 1조 번호는 : ` + lottoNum());
-                    //console.log(lottoNum());
-                    break;
-                case 'btn2':
-                    clickBtn.innerHTML = (`이번주 2조 번호는 : ` + lottoNum() + '<br/>');
-                    clickBtn.innerHTML = clickBtn.innerHTML + (`이번주 2조 번호는 : ` + lottoNum());
-                    break;
-                case 'btn3':
-                    clickBtn.innerHTML = (`이번주 3조 번호는 : ` + lottoNum() + '<br/>');
-                    clickBtn.innerHTML = clickBtn.innerHTML + (`이번주 3조 번호는 : ` + lottoNum() + '<br/>');
-                    clickBtn.innerHTML = clickBtn.innerHTML + (`이번주 3조 번호는 : ` + lottoNum())
-                    break;
-                case 'btn4':
-                    clickBtn.innerHTML = (`이번주 4조 번호는 : ` + lottoNum() + '<br/>');
-                    clickBtn.innerHTML = clickBtn.innerHTML + (`이번주 4조 번호는 : ` + lottoNum() + '<br/>');
-                    clickBtn.innerHTML = clickBtn.innerHTML + (`이번주 4조 번호는 : ` + lottoNum() + '<br/>');
-                    clickBtn.innerHTML = clickBtn.innerHTML + (`이번주 4조 번호는 : ` + lottoNum())
-                    break;
-                case 'btn5':
-                    clickBtn.innerHTML = (`이번주 5조 번호는 : ` + lottoNum() + '<br/>');
-                    clickBtn.innerHTML = clickBtn.innerHTML + (`이번주 5조 번호는 : ` + lottoNum() + '<br/>');
-                    clickBtn.innerHTML = clickBtn.innerHTML + (`이번주 5조 번호는 : ` + lottoNum() + '<br/>');
-                    clickBtn.innerHTML = clickBtn.innerHTML + (`이번주 5조 번호는 : ` + lottoNum() + '<br/>');
-                    clickBtn.innerHTML = clickBtn.innerHTML + (`이번주 5조 번호는 : ` + lottoNum())
-                    break;
-                case 'btn6':
-                    let getNum = prompt("당신이 꿈에서 본 번호는 ?", "예 : 1,12,24,...");
-                        getNum = getNum.split(','); //promot()에서 여러 항목을 입력받음
-                            console.log(getNum);
-                    // 1째 조건 : 입력받은 숫자가 45보다 크면 다시 입력 받는다.
-
-                    // 문제 1, 받은 수가 0일때 재 입력을 받아야 하는데, 않됨
-                    // 문제 2, 반복되는 부분이 많아서 정리해야 하는데, 어떻게 해야할지 모름
-                    // 문제 3, 중복 숫자가 아직도 발생함
-
-                        const isBelowThreshold = (currentValue) => currentValue < 46;
-                        const getNumless = getNum.every(isBelowThreshold) //array.every() - 메서드는 배열 안의 모든 요소가 주어진 판별 함수를 통과하는지 테스트합니다. Boolean 값을 반환합니다.                            
-                            console.log(getNum.every(isBelowThreshold))
-
-                        if (getNumless === false) {
-                            getNum = prompt("45보다 작은수를 입력해 주세요 ?", "예 : 2,34,21, ...");
-                            console.log(getNumless);
-                            getNum = getNum.split(',');
-                            console.log(getNum)
-
-                            const isBelowThreshold = (currentValue) => currentValue < 46;
-                            console.log(getNum.every(isBelowThreshold))
-                            const getNumless = getNum.every(isBelowThreshold) //array.every() 참조하기                            
-                            }
-                        if (getNumless === false) {
-                            getNum = prompt("45보다 작은수를 입력해 주세요 ?", "예 : 2,34,21, ...");
-                            getNum = getNum.split(',');
-                            console.log(getNum)
-
-                            const isBelowThreshold = (currentValue) => currentValue < 46;
-                            console.log(getNum.every(isBelowThreshold))
-                            const getNumless = getNum.every(isBelowThreshold) //array.every() 참조하기                            
-                            }
-
-                            let result = getNum.map(function(x){
-                            return parseInt(x);
-                        });  //String[]를 Number[]로 변경
-
-                    // 2째 조건 : 입력받은 수가 몇개인지 확인하고 6보다 적으면 나머지는 자동 생성한다.
-                        let count = result.length;
-                        while (count < 6) {
-                            let num_2 = Math.floor(Math.random() * 45 + 1 );
-                            count = count + 1;
-
-                            for (let j in result) {
-                                if (num_2 === result) {
-                                    num_2 = Math.floor(Math.random() * 45 + 1 );
-                                } // 숫자의 중복확인
-                            } // 6자리의 Math.random()생성
-                            result.push(num_2);  // 새로운 숫자를 하나씩 추가
-                        }
-                        console.log(result)
-
-                        result.sort(function (a,b) {
-                            return a-b;
-                            }) // 오름차순으로 숫자를 정렬
-                        
-                        if (getNum === null || getNum === ""){
-                            clickBtn.innerHTML = (`번호 입력이 없을때 : ` + lottoNum());
-                        } else {
-                            clickBtn.innerHTML = (`꿈속 숫자와... : ` + result);
-                        } // prompt()에 입력이 없을때와 있을때
-                        
-                    break;
+        // lotto_data.json 파일에서 데이터를 불러와 출현 빈도를 계산
+        async function loadLottoData() {
+            try {
+                const response = await fetch('lotto_data.json'); // lotto_data.json 파일 로드
+                if (!response.ok) {
+                    throw new Error('JSON 파일을 불러오는 데 실패했습니다.');
+                }
+                const lottoData = await response.json(); // JSON 데이터 파싱
+                calculateFrequency(lottoData); // 출현 빈도 계산
+            } catch (error) {
+                console.error('로또 데이터를 불러오는 중 오류 발생:', error);
             }
         }
 
-        t1.addEventListener('click', btn_listener);
-        t2.addEventListener('click', btn_listener);
-        t3.addEventListener('click', btn_listener);
-        t4.addEventListener('click', btn_listener);
-        t5.addEventListener('click', btn_listener);
-        t6.addEventListener('click', btn_listener);
-    </script>
-</body> <br>
-<p>이 프로그램은 개인의 공부를 위해서 만들었으며, 영리목적으로 사용할수 없습니다.</p>
-<p>nanireu@gmail.com</p>
-</html>
+        // 출현 빈도를 계산하는 함수
+        function calculateFrequency(lottoData) {
+            const frequency = {};
 
-<!--
-    v2.7 : 2022.6.10 prompt()에서 45보다 큰수를 입력했을때 다시 prompt()실행, 2022.6.26일 해결 햐~ 
-        ->아직 미해결..
-    v2.6 : 2022.6.8 꿈에서본 숫자와 중복 확인하기.
-    v2.5 : 2022.6.6 꿈에서본 번호 입력받아 로또번호 작성하기.
-    v2.4 : 2022.6.2 lotto.css를 추가하여 간단하게 css를 적용하였습니ㅏㄷ.
-    v2.3 : 2022.5.25 innerText & innerHtml, <p class="something"></p>
-        document.querySelector(".something") 과 관련한 공부.
-    v2.2 : 2022.5.23 document.getElementById와 addeventListene를 분리하고 whitch를 사용하여 코드를 좀더 분류했다.
--->
+            // 각 회차의 번호를 순회하며 빈도 계산
+            lottoData.forEach(draw => {
+                draw.numbers.forEach(number => {
+                    frequency[number] = (frequency[number] || 0) + 1;
+                });
+            });
+
+            // 출현 빈도에 따라 로또 번호를 그룹화
+            groupLottoNumbers(frequency);
+        }
+
+        // 출현 빈도에 따라 로또 번호를 그룹화하는 함수
+        function groupLottoNumbers(frequency) {
+            const lottoByWinCount = {};
+
+            for (const [number, count] of Object.entries(frequency)) {
+                if (!lottoByWinCount[count]) {
+                    lottoByWinCount[count] = [];
+                }
+                lottoByWinCount[count].push(Number(number));
+            }
+
+            // 그룹화된 데이터를 기반으로 로또 번호 세트를 생성
+            groupAndGenerateLottoSets(lottoByWinCount);
+        }
+
+        // 그룹화된 데이터를 기반으로 로또 번호 세트를 생성하는 함수
+        function groupAndGenerateLottoSets(lottoByWinCount) {
+            const groupedLottoByWinCount = { group1: {}, group2: {}, group3: {} };
+
+            // 당첨 횟수를 기준으로 오름차순 정렬
+            const sortedKeys = Object.keys(lottoByWinCount).sort((a, b) => Number(a) - Number(b));
+            const groupSize = Math.ceil(sortedKeys.length / 3);
+
+            // 그룹 분할 (group1: 최저 당첨, group2: 중간 당첨, group3: 최다 당첨)
+            for (let i = 0; i < sortedKeys.length; i++) {
+                const key = sortedKeys[i];
+                if (i < groupSize) {
+                    groupedLottoByWinCount.group1[key] = lottoByWinCount[key];
+                } else if (i < groupSize * 2) {
+                    groupedLottoByWinCount.group2[key] = lottoByWinCount[key];
+                } else {
+                    groupedLottoByWinCount.group3[key] = lottoByWinCount[key];
+                }
+            }
+
+            // 로또 번호 세트 생성 및 표시
+            displayLottoSets(groupedLottoByWinCount);
+        }
+
+        // 로또 번호 세트를 생성하고 화면에 표시하는 함수
+        function displayLottoSets(groupedLottoByWinCount) {
+            const numbersList = document.getElementById('lottoNumbersList');
+
+            // 로또 번호 세트 생성 함수
+            function generateLottoSet() {
+                const randomValues = [];
+
+                // 각 그룹에서 번호를 선택
+                ['group1', 'group2', 'group3'].forEach((group, index) => {
+                    const count = index === 0 ? 1 : index === 1 ? 2 : 3; // group1: 1개, group2: 2개, group3: 3개
+                    const keys = Object.keys(groupedLottoByWinCount[group]);
+
+                    for (let i = 0; i < count; i++) {
+                        if (keys.length === 0) break;
+
+                        const randomIndex = Math.floor(Math.random() * keys.length);
+                        const randomKey = keys[randomIndex];
+                        const values = groupedLottoByWinCount[group][randomKey];
+                        const randomValue = values[Math.floor(Math.random() * values.length)];
+
+                        if (!randomValues.includes(randomValue)) {
+                            randomValues.push(randomValue);
+                        } else {
+                            i--; // 중복이면 다시 시도
+                        }
+                    }
+                });
+
+                // 번호를 오름차순으로 정렬
+                return randomValues.sort((a, b) => a - b);
+            }
+
+            // 5세트의 로또 번호 생성
+            for (let i = 1; i <= 5; i++) {
+                const lottoSet = generateLottoSet();
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<strong>${i}번 로또번호: <span class="lotto-number">${lottoSet.join(', ')}</span></strong>`;
+                numbersList.appendChild(listItem);
+            }
+        }
+
+        // 페이지 로드 시 JSON 데이터 로드
+        window.onload = loadLottoData;
+    </script>
+</body>
+</html>
