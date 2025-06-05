@@ -47,13 +47,14 @@
     <p>이 프로그램은 개인의 공부를 위해서 만들었으며, 영리목적으로 사용할 수 없습니다.</p>
     <p>2024. 4. 7. 수정</p>
     <p>2025. 4. 7. Perplexity, Claude, VScode로 수정</p>
+    <p>2025. 6. 5.  그룹1,2,3의 적용변경및 음력날짜 적용</p>
     <p>nanireu@gmail.com</p>
 
     <script>
-        // lotto_data.json 파일에서 데이터를 불러와 출현 빈도를 계산
+        // lotto_data_with_lunar.json 파일에서 데이터를 불러와 출현 빈도를 계산
         async function loadLottoData() {
             try {
-                const response = await fetch('lotto_data.json'); // lotto_data.json 파일 로드
+                const response = await fetch('lotto_data_with_lunar.json'); // lotto_data_with_lunar.json 파일 로드
                 if (!response.ok) {
                     throw new Error('JSON 파일을 불러오는 데 실패했습니다.');
                 }

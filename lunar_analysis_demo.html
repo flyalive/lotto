@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음력 로또 상관관계 분석기</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        select {
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+        }
+        
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .result-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .result-card h3 {
+            color: #4a5568;
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+        
+        .numbers {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .loading {
+            text-align: center;
+            font-size: 18px;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .success {
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .lunar-info {
+            background: #e6fffa;
+            border: 1px solid #38b2ac;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .recommendation-card {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+        
+        .recommendation-card h3 {
+            color: white;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌙 음력 로또 상관관계 분석기</h1>
+        
+        <div class="controls">
+            <button id="analyzeBtn" onclick="runAnalysis()">전체 분석 실행</button>
+            <button id="reportBtn" onclick="showReport()" disabled>상세 보고서 보기</button>
+            
+            <select id="monthSelect">
+                <option value="">음력 월 선택</option>
+                <option value="정월">정월</option>
+                <option value="이월">이월</option>
+                <option value="삼월">삼월</option>
+                <option value="사월">사월</option>
+                <option value="오월">오월</option>
+                <option value="유월">유월</option>
+                <option value="칠월">칠월</option>
+                <option value="팔월">팔월</option>
+                <option value="구월">구월</option>
+                <option value="시월">시월</option>
+                <option value="동월">동월</option>
+                <option value="섣달">섣달</option>
+            </select>
+            
+            <button id="recommendBtn" onclick="generateRecommendation()" disabled>추천 번호 생성</button>
+        </div>
+        
+        <div id="status"></div>
+        <div id="results" class="results"></div>
+    </div>
+
+    <script src="lunar_lotto_analyzer.js"></script>
+    <script>
+        let analyzer = null;
+        let analysisResults = null;
+        
+        async function runAnalysis() {
+            const statusDiv = document.getElementById('status');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const resultsDiv = document.getElementById('results');
+            
+            try {
+                analyzeBtn.disabled = true;
+                statusDiv.innerHTML = '<div class="loading">🌙 음력 데이터 분석 중...</div>';
+                resultsDiv.innerHTML = '';
+                
+                analyzer = new LunarLottoAnalyzer();
+                analysisResults = await analyzer.runFullAnalysis();
+                
+                if (analysisResults) {
+                    statusDiv.innerHTML = '<div class="success">✅ 분석 완료! 총 1,166개의 로또 데이터를 음력 기준으로 분석했습니다.</div>';
+                    
+                    document.getElementById('reportBtn').disabled = false;
+                    document.getElementById('recommendBtn').disabled = false;
+                    
+                    showQuickSummary();
+                } else {
+                    throw new Error('분석 결과를 가져올 수 없습니다.');
+                }
+                
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="error">❌ 분석 실패: ${error.message}</div>`;
+                console.error('분석 오류:', error);
+            } finally {
+                analyzeBtn.disabled = false;
+            }
+        }
+        
+        function showQuickSummary() {
+            const resultsDiv = document.getElementById('results');
+            
+            if (!analysisResults) return;
+            
+            let html = '';
+            
+            // 음력 월별 요약
+            const monthStats = analysisResults.lunarMonth.monthStats;
+            html += `
+                <div class="result-card">
+                    <h3>🌙 음력 월별 추첨 현황</h3>
+                    ${Object.entries(monthStats)
+                        .sort((a, b) => b[1].totalDraws - a[1].totalDraws)
+                        .slice(0, 6)
+                        .map(([month, stats]) => 
+                            `<div class="stat-item">
+                                <span>${month}</span>
+                                <span><strong>${stats.totalDraws}회</strong></span>
+                            </div>`
+                        ).join('')}
+                </div>
+            `;
+            
+            // 간지년별 요약
+            const ganzhiStats = analysisResults.ganzhi.ganzhiStats;
+            html += `
+                <div class="result-card">
+                    <h3>🐲 간지년별 추첨 TOP 6</h3>
+                    ${Object.entries(ganzhiStats)
+                        .sort((a, b) => b[1].totalDraws - a[1].totalDraws)
+                        .slice(0, 6)
+                        .map(([ganzhi, stats]) => 
+                            `<div class="stat-item">
+                                <span>${ganzhi}</span>
+                                <span><strong>${stats.totalDraws}회</strong></span>
+                            </div>`
+                        ).join('')}
+                </div>
+            `;
+            
+            // 24절기별 요약
+            const termStats = analysisResults.solarTerm.termStats;
+            if (Object.keys(termStats).length > 0) {
+                html += `
+                    <div class="result-card">
+                        <h3>🌱 24절기별 추첨 TOP 6</h3>
+                        ${Object.entries(termStats)
+                            .sort((a, b) => b[1].totalDraws - a[1].totalDraws)
+                            .slice(0, 6)
+                            .map(([term, stats]) => 
+                                `<div class="stat-item">
+                                    <span>${term}</span>
+                                    <span><strong>${stats.totalDraws}회</strong></span>
+                                </div>`
+                            ).join('')}
+                    </div>
+                `;
+            }
+            
+            // 음력 일자별 요약
+            const dayStats = analysisResults.lunarDay.dayRangeStats;
+            html += `
+                <div class="result-card">
+                    <h3>📅 음력 일자별 추첨 현황</h3>
+                    ${Object.entries(dayStats)
+                        .map(([range, stats]) => 
+                            `<div class="stat-item">
+                                <span>${range}</span>
+                                <span><strong>${stats.totalDraws}회</strong></span>
+                            </div>`
+                        ).join('')}
+                </div>
+            `;
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function showReport() {
+            if (!analyzer) {
+                alert('먼저 분석을 실행해주세요.');
+                return;
+            }
+            
+            // 콘솔에 상세 보고서 출력
+            analyzer.printAnalysisReport();
+            
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = '<div class="lunar-info">📊 상세 보고서가 브라우저 콘솔에 출력되었습니다. F12 키를 눌러 개발자 도구를 열고 Console 탭을 확인하세요.</div>';
+        }
+        
+        function generateRecommendation() {
+            if (!analyzer) {
+                alert('먼저 분석을 실행해주세요.');
+                return;
+            }
+            
+            const monthSelect = document.getElementById('monthSelect');
+            const selectedMonth = monthSelect.value;
+            
+            if (!selectedMonth) {
+                alert('음력 월을 선택해주세요.');
+                return;
+            }
+            
+            const recommendation = analyzer.generateLunarBasedNumbers(selectedMonth);
+            
+            if (recommendation) {
+                const resultsDiv = document.getElementById('results');
+                
+                const recommendationHtml = `
+                    <div class="recommendation-card">
+                        <h3>🎯 ${selectedMonth} 기준 추천 번호</h3>
+                        <div class="lunar-info">
+                            <p>음력 ${selectedMonth}의 과거 패턴을 분석하여 생성된 추천 번호입니다.</p>
+                        </div>
+                        <div class="numbers">
+                            ${recommendation.map(num => `<div class="number">${num}</div>`).join('')}
+                        </div>
+                        <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
+                            * 이 번호는 통계적 분석 결과이며, 당첨을 보장하지 않습니다.
+                        </p>
+                    </div>
+                `;
+                
+                resultsDiv.innerHTML = recommendationHtml + resultsDiv.innerHTML;
+                
+                console.log(`🎯 ${selectedMonth} 기준 추천 번호:`, recommendation);
+            } else {
+                alert('추천 번호 생성에 실패했습니다.');
+            }
+        }
+        
+        // 페이지 로드 시 안내 메시지
+        window.onload = function() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `
+                <div class="lunar-info">
+                    <h3>🌙 음력 로또 상관관계 분석기에 오신 것을 환영합니다!</h3>
+                    <p>이 도구는 과거 23년간의 로또 데이터를 음력 정보와 연결하여 패턴을 분석합니다.</p>
+                    <ul>
+                        <li>🔍 <strong>전체 분석 실행</strong>: 음력 월별, 간지년별, 24절기별 패턴 분석</li>
+                        <li>📊 <strong>상세 보고서</strong>: 콘솔에서 자세한 분석 결과 확인</li>
+                        <li>🎯 <strong>추천 번호</strong>: 특정 음력 월 기준 번호 추천</li>
+                    </ul>
+                    <p><em>먼저 "전체 분석 실행" 버튼을 클릭하여 분석을 시작하세요.</em></p>
+                </div>
+            `;
+        };
+    </script>
+</body>
+</html> 
