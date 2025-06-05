@@ -4,6 +4,8 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>kong의 로또번호 맞추기</title>
+    <!-- Korean Lunar Calendar 라이브러리 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/korean-lunar-calendar@0.0.14/dist/korean-lunar-calendar.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,11 +35,32 @@
             font-weight: bold;
             color: #e91e63;
         }
+        .lunar-demo {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+        .lunar-result {
+            font-weight: bold;
+            color: #1976D2;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>  
     <h3>로또 번호 맞추기 (대박 나세요!!)</h3><br>
     
+    <!-- 음력 변환 데모 섹션 -->
+    <div class="lunar-demo">
+        <h4>🌙 음력 변환 데모</h4>
+        <p>양력 날짜를 입력하면 음력으로 변환해드립니다.</p>
+        <input type="date" id="solarDate" value="2024-05-15">
+        <button onclick="convertToLunar()">음력으로 변환</button>
+        <div id="lunarResult" class="lunar-result"></div>
+    </div>
+
     <div>
         <ul id="lottoNumbersList">
             <!-- 여기에 로또 번호가 삽입됩니다 -->
@@ -51,6 +74,42 @@
     <p>nanireu@gmail.com</p>
 
     <script>
+        // 음력 변환 함수 추가
+        function convertToLunar() {
+            try {
+                // KoreanLunarCalendar 객체 생성
+                const calendar = new KoreanLunarCalendar();
+                
+                console.log("--- 양력 -> 음력 변환 예시 (JS) ---");
+                
+                // 입력된 양력 날짜 가져오기
+                const solarDateInput = document.getElementById('solarDate').value;
+                if (!solarDateInput) {
+                    alert('날짜를 선택해주세요.');
+                    return;
+                }
+                
+                const [year, month, day] = solarDateInput.split('-').map(Number);
+                
+                // 변환할 양력 날짜 설정
+                calendar.setSolarDate(year, month, day);
+                
+                // 변환 결과 가져오기
+                const lunarDate = calendar.getLunarCalendar();
+                
+                // 결과 출력
+                // 월과 일은 두 자리로 표시되도록 padStart 사용
+                const result = `양력 ${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} >> 음력 ${lunarDate.year}-${String(lunarDate.month).padStart(2, '0')}-${String(lunarDate.day).padStart(2, '0')} (윤달: ${lunarDate.isLeapMonth})`;
+                
+                console.log(result);
+                document.getElementById('lunarResult').textContent = result;
+                
+            } catch (error) {
+                console.error('음력 변환 중 오류 발생:', error);
+                document.getElementById('lunarResult').textContent = '변환 중 오류가 발생했습니다: ' + error.message;
+            }
+        }
+
         // lotto_data_with_lunar.json 파일에서 데이터를 불러와 출현 빈도를 계산
         async function loadLottoData() {
             try {
