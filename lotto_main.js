@@ -544,6 +544,18 @@ function initializeLottoApp() {
         console.warn('⚠️ Korean Lunar Calendar 라이브러리 로드에 실패했습니다.');
     }
     
+    // 오늘 날짜를 음력 변환 데모 입력 필드에 자동 설정
+    const today = new Date();
+    const todayString = today.getFullYear() + '-' + 
+                       String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                       String(today.getDate()).padStart(2, '0');
+    
+    const solarDateInput = document.getElementById('solarDate');
+    if (solarDateInput) {
+        solarDateInput.value = todayString;
+        console.log(`📅 오늘 날짜 자동 설정: ${todayString}`);
+    }
+    
     // 로또 데이터 로드
     loadLottoData();
 }

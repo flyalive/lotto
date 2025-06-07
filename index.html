@@ -11,9 +11,11 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 20px auto;
             padding: 25px;
             background-color: #f5f5f5;
+            max-width: 800px;
+            text-align: center;
         }   
         h3  {
             color: #333;   
@@ -38,70 +40,84 @@
             color: #e91e63;
         }
         .lunar-demo {
-            margin: 20px 0;
+            margin: 20px auto;
             padding: 15px;
             background-color: #e8f4fd;
             border-radius: 8px;
             border-left: 4px solid #2196F3;
+            max-width: 600px;
+            text-align: left;
         }
         .lunar-result {
             font-weight: bold;
             color: #1976D2;
             margin-top: 10px;
         }
+        /* 폼 요소들 가운데 정렬 */
+        input, select, button {
+            margin: 5px;
+        }
+        /* 메인 콘텐츠 박스 */
+        .main-content {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: left;
+        }
     </style>
 </head>
 <body>  
     <h3>로또 번호 맞추기 (대박 나세요!!)</h3><br>
     
-    <!-- 음력 변환 데모 섹션 -->
-    <div class="lunar-demo">
-        <h4>🌙 음력 변환 데모</h4>
-        <p>양력 날짜를 입력하면 음력으로 변환해드립니다.</p>
-        <input type="date" id="solarDate" value="2024-05-15">
-        <button onclick="convertToLunar()">음력으로 변환</button>
-        <div id="lunarResult" class="lunar-result"></div>
-    </div>
-
-    <!-- 음력 기반 번호 추천 섹션 -->
-    <div class="lunar-demo">
-        <h4>🎯 음력 기반 번호 추천</h4>
-        <p>현재 날짜의 음력 정보를 바탕으로 과거 패턴을 분석하여 번호를 추천합니다.</p>
-        <button onclick="generateLunarBasedNumbers()">음력 기반 추천 번호 생성</button>
-        <div id="lunarRecommendation" class="lunar-result"></div>
-        <ul id="lunarLottoList"></ul>
-    </div>
-
-    <!-- 음력 월별 맞춤 번호 생성 섹션 -->
-    <div class="lunar-demo">
-        <h4>📅 음력 월별 맞춤 번호 생성</h4>
-        <p>특정 음력 월의 과거 당첨 패턴을 분석하여 해당 월에 최적화된 번호를 추천합니다.</p>
-        <div style="margin: 10px 0;">
-            <label for="lunarMonthSelect">음력 월 선택: </label>
-            <select id="lunarMonthSelect" style="padding: 5px; margin-right: 10px;">
-                <option value="1">정월 (1월)</option>
-                <option value="2">이월 (2월)</option>
-                <option value="3">삼월 (3월)</option>
-                <option value="4">사월 (4월)</option>
-                <option value="5">오월 (5월)</option>
-                <option value="6">유월 (6월)</option>
-                <option value="7">칠월 (7월)</option>
-                <option value="8">팔월 (8월)</option>
-                <option value="9">구월 (9월)</option>
-                <option value="10">시월 (10월)</option>
-                <option value="11">동월 (11월)</option>
-                <option value="12">섣달 (12월)</option>
-            </select>
-            <button onclick="generateMonthlyCustomNumbers()">해당 월 맞춤 번호 생성</button>
+    <div class="main-content">
+        <!-- 음력 변환 데모 섹션 -->
+        <div class="lunar-demo">
+            <h4>🌙 음력 변환 데모</h4>
+            <p>양력 날짜를 입력하면 음력으로 변환해드립니다.</p>
+            <input type="date" id="solarDate" placeholder="오늘 날짜가 자동 설정됩니다">
+            <button onclick="convertToLunar()">음력으로 변환</button>
+            <div id="lunarResult" class="lunar-result"></div>
         </div>
-        <div id="monthlyAnalysisResult" class="lunar-result"></div>
-        <ul id="monthlyLottoList"></ul>
-    </div>
 
-    <div>
-        <ul id="lottoNumbersList">
-            <!-- 여기에 로또 번호가 삽입됩니다 -->
-        </ul>
+        <!-- 음력 기반 번호 추천 섹션 -->
+        <div class="lunar-demo">
+            <h4>🎯 음력 기반 번호 추천</h4>
+            <p>현재 날짜의 음력 정보를 바탕으로 과거 패턴을 분석하여 번호를 추천합니다.</p>
+            <button onclick="generateLunarBasedNumbers()">음력 기반 추천 번호 생성</button>
+            <div id="lunarRecommendation" class="lunar-result"></div>
+            <ul id="lunarLottoList"></ul>
+        </div>
+
+        <!-- 음력 월별 맞춤 번호 생성 섹션 -->
+        <div class="lunar-demo">
+            <h4>📅 음력 월별 맞춤 번호 생성</h4>
+            <p>특정 음력 월의 과거 당첨 패턴을 분석하여 해당 월에 최적화된 번호를 추천합니다.</p>
+            <div style="margin: 10px 0;">
+                <label for="lunarMonthSelect">음력 월 선택: </label>
+                <select id="lunarMonthSelect" style="padding: 5px; margin-right: 10px;">
+                    <option value="1">정월 (1월)</option>
+                    <option value="2">이월 (2월)</option>
+                    <option value="3">삼월 (3월)</option>
+                    <option value="4">사월 (4월)</option>
+                    <option value="5">오월 (5월)</option>
+                    <option value="6">유월 (6월)</option>
+                    <option value="7">칠월 (7월)</option>
+                    <option value="8">팔월 (8월)</option>
+                    <option value="9">구월 (9월)</option>
+                    <option value="10">시월 (10월)</option>
+                    <option value="11">동월 (11월)</option>
+                    <option value="12">섣달 (12월)</option>
+                </select>
+                <button onclick="generateMonthlyCustomNumbers()">해당 월 맞춤 번호 생성</button>
+            </div>
+            <div id="monthlyAnalysisResult" class="lunar-result"></div>
+            <ul id="monthlyLottoList"></ul>
+        </div>
+
+        <div>
+            <ul id="lottoNumbersList">
+                <!-- 여기에 로또 번호가 삽입됩니다 -->
+            </ul>
+        </div>
     </div>
 
     <p>이 프로그램은 개인의 공부를 위해서 만들었으며, 영리목적으로 사용할 수 없습니다.</p>
