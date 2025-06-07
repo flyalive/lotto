@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>kong의 로또번호 맞추기</title>
     <!-- Korean Lunar Calendar 라이브러리 CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/korean-lunar-calendar@0.0.14/dist/korean-lunar-calendar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/korean-lunar-calendar@0.3.6/dist/korean-lunar-calendar.min.js"></script>
+    <!-- 메인 JavaScript 파일 -->
+    <script src="lotto_main.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,6 +63,41 @@
         <div id="lunarResult" class="lunar-result"></div>
     </div>
 
+    <!-- 음력 기반 번호 추천 섹션 -->
+    <div class="lunar-demo">
+        <h4>🎯 음력 기반 번호 추천</h4>
+        <p>현재 날짜의 음력 정보를 바탕으로 과거 패턴을 분석하여 번호를 추천합니다.</p>
+        <button onclick="generateLunarBasedNumbers()">음력 기반 추천 번호 생성</button>
+        <div id="lunarRecommendation" class="lunar-result"></div>
+        <ul id="lunarLottoList"></ul>
+    </div>
+
+    <!-- 음력 월별 맞춤 번호 생성 섹션 -->
+    <div class="lunar-demo">
+        <h4>📅 음력 월별 맞춤 번호 생성</h4>
+        <p>특정 음력 월의 과거 당첨 패턴을 분석하여 해당 월에 최적화된 번호를 추천합니다.</p>
+        <div style="margin: 10px 0;">
+            <label for="lunarMonthSelect">음력 월 선택: </label>
+            <select id="lunarMonthSelect" style="padding: 5px; margin-right: 10px;">
+                <option value="1">정월 (1월)</option>
+                <option value="2">이월 (2월)</option>
+                <option value="3">삼월 (3월)</option>
+                <option value="4">사월 (4월)</option>
+                <option value="5">오월 (5월)</option>
+                <option value="6">유월 (6월)</option>
+                <option value="7">칠월 (7월)</option>
+                <option value="8">팔월 (8월)</option>
+                <option value="9">구월 (9월)</option>
+                <option value="10">시월 (10월)</option>
+                <option value="11">동월 (11월)</option>
+                <option value="12">섣달 (12월)</option>
+            </select>
+            <button onclick="generateMonthlyCustomNumbers()">해당 월 맞춤 번호 생성</button>
+        </div>
+        <div id="monthlyAnalysisResult" class="lunar-result"></div>
+        <ul id="monthlyLottoList"></ul>
+    </div>
+
     <div>
         <ul id="lottoNumbersList">
             <!-- 여기에 로또 번호가 삽입됩니다 -->
@@ -71,161 +108,7 @@
     <p>2024. 4. 7. 수정</p>
     <p>2025. 4. 7. Perplexity, Claude, VScode로 수정</p>
     <p>2025. 6. 5.  그룹1,2,3의 적용변경및 음력날짜 적용</p>
+    <p>2025. 6. 7.  음력으로 월별 맞춤 번호 생성 기능 추가</p>
     <p>nanireu@gmail.com</p>
-
-    <script>
-        // 음력 변환 함수 추가
-        function convertToLunar() {
-            try {
-                // KoreanLunarCalendar 객체 생성
-                const calendar = new KoreanLunarCalendar();
-                
-                console.log("--- 양력 -> 음력 변환 예시 (JS) ---");
-                
-                // 입력된 양력 날짜 가져오기
-                const solarDateInput = document.getElementById('solarDate').value;
-                if (!solarDateInput) {
-                    alert('날짜를 선택해주세요.');
-                    return;
-                }
-                
-                const [year, month, day] = solarDateInput.split('-').map(Number);
-                
-                // 변환할 양력 날짜 설정
-                calendar.setSolarDate(year, month, day);
-                
-                // 변환 결과 가져오기
-                const lunarDate = calendar.getLunarCalendar();
-                
-                // 결과 출력
-                // 월과 일은 두 자리로 표시되도록 padStart 사용
-                const result = `양력 ${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} >> 음력 ${lunarDate.year}-${String(lunarDate.month).padStart(2, '0')}-${String(lunarDate.day).padStart(2, '0')} (윤달: ${lunarDate.isLeapMonth})`;
-                
-                console.log(result);
-                document.getElementById('lunarResult').textContent = result;
-                
-            } catch (error) {
-                console.error('음력 변환 중 오류 발생:', error);
-                document.getElementById('lunarResult').textContent = '변환 중 오류가 발생했습니다: ' + error.message;
-            }
-        }
-
-        // lotto_data_with_lunar.json 파일에서 데이터를 불러와 출현 빈도를 계산
-        async function loadLottoData() {
-            try {
-                const response = await fetch('lotto_data_with_lunar.json'); // lotto_data_with_lunar.json 파일 로드
-                if (!response.ok) {
-                    throw new Error('JSON 파일을 불러오는 데 실패했습니다.');
-                }
-                const lottoData = await response.json(); // JSON 데이터 파싱
-                calculateFrequency(lottoData); // 출현 빈도 계산
-            } catch (error) {
-                console.error('로또 데이터를 불러오는 중 오류 발생:', error);
-            }
-        }
-
-        // 출현 빈도를 계산하는 함수
-        function calculateFrequency(lottoData) {
-            const frequency = {};
-
-            // 각 회차의 번호를 순회하며 빈도 계산
-            lottoData.forEach(draw => {
-                draw.numbers.forEach(number => {
-                    frequency[number] = (frequency[number] || 0) + 1;
-                });
-                // 보너스 번호는 가중치 0.5로 빈도에 포함
-                if (draw.bonus !== undefined) {
-                    frequency[draw.bonus] = (frequency[draw.bonus] || 0) + 0.5;
-                }
-            });
-
-            // 출현 빈도에 따라 로또 번호를 그룹화
-            groupLottoNumbers(frequency);
-        }
-
-        // 출현 빈도에 따라 로또 번호를 그룹화하는 함수
-        function groupLottoNumbers(frequency) {
-            const lottoByWinCount = {};
-
-            for (const [number, count] of Object.entries(frequency)) {
-                if (!lottoByWinCount[count]) {
-                    lottoByWinCount[count] = [];
-                }
-                lottoByWinCount[count].push(Number(number));
-            }
-
-            // 그룹화된 데이터를 기반으로 로또 번호 세트를 생성
-            groupAndGenerateLottoSets(lottoByWinCount);
-        }
-
-        // 그룹화된 데이터를 기반으로 로또 번호 세트를 생성하는 함수
-        function groupAndGenerateLottoSets(lottoByWinCount) {
-            const groupedLottoByWinCount = { group1: {}, group2: {}, group3: {} };
-
-            // 당첨 횟수를 기준으로 오름차순 정렬
-            const sortedKeys = Object.keys(lottoByWinCount).sort((a, b) => Number(a) - Number(b));
-            const groupSize = Math.ceil(sortedKeys.length / 3);
-
-            // 그룹 분할 (group1: 최저 당첨, group2: 중간 당첨, group3: 최다 당첨)
-            for (let i = 0; i < sortedKeys.length; i++) {
-                const key = sortedKeys[i];
-                if (i < groupSize) {
-                    groupedLottoByWinCount.group1[key] = lottoByWinCount[key];
-                } else if (i < groupSize * 2) {
-                    groupedLottoByWinCount.group2[key] = lottoByWinCount[key];
-                } else {
-                    groupedLottoByWinCount.group3[key] = lottoByWinCount[key];
-                }
-            }
-
-            // 로또 번호 세트 생성 및 표시
-            displayLottoSets(groupedLottoByWinCount);
-        }
-
-        // 로또 번호 세트를 생성하고 화면에 표시하는 함수
-        function displayLottoSets(groupedLottoByWinCount) {
-            const numbersList = document.getElementById('lottoNumbersList');
-
-            // 로또 번호 세트 생성 함수
-            function generateLottoSet() {
-                const randomValues = [];
-
-                // 각 그룹에서 번호를 선택
-                ['group1', 'group2', 'group3'].forEach((group, index) => {
-                    const count = index === 0 ? 3 : index === 1 ? 2 : 1; // group1: 3개, group2: 2개, group3: 1개
-                    const keys = Object.keys(groupedLottoByWinCount[group]);
-
-                    for (let i = 0; i < count; i++) {
-                        if (keys.length === 0) break;
-
-                        const randomIndex = Math.floor(Math.random() * keys.length);
-                        const randomKey = keys[randomIndex];
-                        const values = groupedLottoByWinCount[group][randomKey];
-                        const randomValue = values[Math.floor(Math.random() * values.length)];
-
-                        if (!randomValues.includes(randomValue)) {
-                            randomValues.push(randomValue);
-                        } else {
-                            i--; // 중복이면 다시 시도
-                        }
-                    }
-                });
-
-                // 번호를 오름차순으로 정렬
-                return randomValues.sort((a, b) => a - b);
-            }
-
-            // 5세트의 로또 번호 생성
-            for (let i = 1; i <= 5; i++) {
-                const lottoSet = generateLottoSet();
-                const listItem = document.createElement('li');
-                listItem.innerHTML = `<strong>${i}번 로또번호: <span class="lotto-number">${lottoSet.join(', ')}</span></strong>`;
-                numbersList.appendChild(listItem);
-            }
-        }
-
-        // 페이지 로드 시 JSON 데이터 로드
-        window.onload = loadLottoData;
-    </script>
 </body>
 </html>
