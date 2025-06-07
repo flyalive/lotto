@@ -1,116 +1,130 @@
-import styled from 'styled-components';
+import { 
+  GlobalStyle,
+  Container, 
+  Header, 
+  MainTitle, 
+  Subtitle,
+  Content,
+  Footer,
+  Disclaimer
+} from './styles/GlobalStyles';
 import LunarConverter from './components/LunarConverter/LunarConverter';
+import LunarRecommendation from './components/LunarRecommendation/LunarRecommendation';
+import MonthlyAnalysis from './components/MonthlyAnalysis/MonthlyAnalysis';
 import useLottoData from './hooks/useLottoData';
-import './styles.css';
-
-const AppContainer = styled.div`
-  font-family: Arial, sans-serif;
-  margin: 20px auto;
-  padding: 25px;
-  background-color: #f5f5f5;
-  max-width: 800px;
-  text-align: center;
-`;
-
-const MainTitle = styled.h3`
-  color: #333;
-  margin-bottom: 30px;
-`;
-
-const MainContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
+import styled from 'styled-components';
 
 const LoadingMessage = styled.div`
-  padding: 20px;
-  background-color: #fff3cd;
+  padding: 40px;
+  text-align: center;
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
   border: 1px solid #ffeaa7;
-  border-radius: 4px;
+  border-radius: 16px;
   color: #856404;
+  font-size: 1.1rem;
+  margin: 20px;
 `;
 
 const ErrorMessage = styled.div`
-  padding: 20px;
-  background-color: #f8d7da;
+  padding: 40px;
+  text-align: center;
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
   border: 1px solid #f5c6cb;
-  border-radius: 4px;
+  border-radius: 16px;
   color: #721c24;
+  font-size: 1.1rem;
+  margin: 20px;
 `;
 
-const Footer = styled.div`
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid #ddd;
-  
-  p {
-    font-size: 14px;
-    color: #777;
-    margin: 5px 0;
-  }
+const SuccessMessage = styled.div`
+  padding: 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  border: 1px solid #c3e6cb;
+  border-radius: 16px;
+  color: #155724;
+  font-size: 1rem;
+  margin: 20px 0;
+  font-weight: 600;
 `;
 
 function App() {
-  const { loading, error, hasData } = useLottoData();
+  const { loading, error, hasData, lottoData } = useLottoData();
 
   if (loading) {
     return (
-      <AppContainer>
-        <MainTitle>로또 번호 맞추기 (대박 나세요!!)</MainTitle>
-        <LoadingMessage>
-          🔄 로또 데이터를 불러오는 중입니다...
-        </LoadingMessage>
-      </AppContainer>
+      <>
+        <GlobalStyle />
+        <Container>
+          <Header>
+            <MainTitle>🎰 로또 번호 맞추기</MainTitle>
+            <Subtitle>대박 나세요!</Subtitle>
+          </Header>
+          <LoadingMessage>
+            🔄 로또 데이터를 불러오는 중입니다...
+            <br />
+            <small style={{ opacity: 0.8, marginTop: '10px', display: 'block' }}>
+              약 1,000개 이상의 데이터를 분석하고 있어요!
+            </small>
+          </LoadingMessage>
+        </Container>
+      </>
     );
   }
 
   if (error) {
     return (
-      <AppContainer>
-        <MainTitle>로또 번호 맞추기 (대박 나세요!!)</MainTitle>
-        <ErrorMessage>
-          ❌ 데이터 로드 중 오류가 발생했습니다: {error}
-        </ErrorMessage>
-      </AppContainer>
+      <>
+        <GlobalStyle />
+        <Container>
+          <Header>
+            <MainTitle>🎰 로또 번호 맞추기</MainTitle>
+            <Subtitle>대박 나세요!</Subtitle>
+          </Header>
+          <ErrorMessage>
+            ❌ 데이터 로드 중 오류가 발생했습니다
+            <br />
+            <small style={{ opacity: 0.8, marginTop: '10px', display: 'block' }}>
+              {error}
+            </small>
+          </ErrorMessage>
+        </Container>
+      </>
     );
   }
 
   return (
-    <AppContainer>
-      <MainTitle>로또 번호 맞추기 (대박 나세요!!)</MainTitle>
-      
-      <MainContent>
-        <LunarConverter />
+    <>
+      <GlobalStyle />
+      <Container>
+        <Header>
+          <MainTitle>🎰 로또 번호 맞추기</MainTitle>
+          <Subtitle>대박 나세요!</Subtitle>
+        </Header>
         
-        {/* TODO: 추가할 컴포넌트들 */}
-        {/* <LunarRecommendation /> */}
-        {/* <MonthlyAnalysis /> */}
-        {/* <LottoResults /> */}
-        
-        {hasData && (
-          <div style={{ 
-            padding: '20px', 
-            backgroundColor: '#d4edda',
-            border: '1px solid #c3e6cb',
-            borderRadius: '4px',
-            color: '#155724'
-          }}>
-            ✅ 로또 데이터가 성공적으로 로드되었습니다!
-          </div>
-        )}
-      </MainContent>
+        <Content>
+          {hasData && (
+            <SuccessMessage>
+              ✅ {lottoData.length}개의 로또 데이터가 성공적으로 로드되었습니다!
+            </SuccessMessage>
+          )}
+          
+          <LunarConverter />
+          <LunarRecommendation />
+          <MonthlyAnalysis />
+        </Content>
 
-      <Footer>
-        <p>이 프로그램은 개인의 공부를 위해서 만들었으며, 영리목적으로 사용할 수 없습니다.</p>
-        <p>2024. 4. 7. 수정</p>
-        <p>2025. 4. 7. Perplexity, Claude, VScode로 수정</p>
-        <p>2025. 6. 5. 그룹1,2,3의 적용변경및 음력날짜 적용</p>
-        <p>2025. 6. 7. 음력으로 월별 맞춤 번호 생성 기능 추가(cursor, claude를 사용)</p>
-        <p>2025. 6. 7. React로 리팩토링</p>
-        <p>nanireu@gmail.com</p>
-      </Footer>
-    </AppContainer>
+        <Footer>
+          <p><strong>이 프로그램은 개인의 공부를 위해서 만들었으며, 영리목적으로 사용할 수 없습니다.</strong></p>
+          <Disclaimer>2024. 4. 7. 수정</Disclaimer>
+          <Disclaimer>2025. 4. 7. Perplexity, Claude, VScode로 수정</Disclaimer>
+          <Disclaimer>2025. 6. 5. 그룹1,2,3의 적용변경및 음력날짜 적용</Disclaimer>
+          <Disclaimer>2025. 6. 7. 음력으로 월별 맞춤 번호 생성 기능 추가(cursor, claude를 사용)</Disclaimer>
+          <Disclaimer>2025. 6. 7. React로 리팩토링 & 모던 UI 적용</Disclaimer>
+          <Disclaimer>nanireu@gmail.com</Disclaimer>
+        </Footer>
+      </Container>
+    </>
   );
 }
 

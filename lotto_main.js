@@ -27,7 +27,11 @@ class LunarCalendarManager {
     convertToLunar() {
         try {
             if (!this.isLibraryLoaded()) {
-                document.getElementById('lunarResult').textContent = '라이브러리가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.';
+                const resultElement = document.getElementById('lunarResult');
+                if (resultElement) {
+                    resultElement.textContent = '라이브러리가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.';
+                    resultElement.className = 'result';
+                }
                 console.error('KoreanLunarCalendar is not loaded yet');
                 return;
             }
@@ -47,14 +51,22 @@ class LunarCalendarManager {
             this.calendar.setSolarDate(year, month, day);
             const lunarDate = this.calendar.getLunarCalendar();
             
-            const result = `양력 ${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} >> 음력 ${lunarDate.year}-${String(lunarDate.month).padStart(2, '0')}-${String(lunarDate.day).padStart(2, '0')} (윤달: ${lunarDate.intercalation ? '윤달' : '평달'})`;
+            const result = `양력 ${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} >> 음력 ${lunarDate.year}-${String(lunarDate.month).padStart(2, '0')}-${String(lunarDate.day).padStart(2, '0')} (${lunarDate.intercalation ? '윤달' : '평달'})`;
             
             console.log(result);
-            document.getElementById('lunarResult').textContent = result;
+            const resultElement = document.getElementById('lunarResult');
+            if (resultElement) {
+                resultElement.textContent = result;
+                resultElement.className = 'result';
+            }
             
         } catch (error) {
             console.error('음력 변환 중 오류 발생:', error);
-            document.getElementById('lunarResult').textContent = '변환 중 오류가 발생했습니다: ' + error.message;
+            const resultElement = document.getElementById('lunarResult');
+            if (resultElement) {
+                resultElement.textContent = '변환 중 오류가 발생했습니다: ' + error.message;
+                resultElement.className = 'result';
+            }
         }
     }
 
@@ -204,28 +216,51 @@ class LunarLottoAnalyzer {
     }
 
     /**
-     * 음력 추천 결과 표시
+     * 음력 추천 결과 표시 (모던 UI 버전)
      */
     displayLunarRecommendation(todayLunar, analysis, recommendedSets) {
         const tenDayNames = ['초순', '중순', '말순'];
         const tenDay = tenDayNames[Math.ceil(todayLunar.day / 10) - 1];
 
-        const recommendationText = `
-            🌙 오늘은 음력 ${todayLunar.year}년 ${todayLunar.month}월 ${todayLunar.day}일 (${tenDay})입니다.
-            ${todayLunar.intercalation ? '(윤달)' : ''}
-            과거 동일 조건 데이터를 분석하여 추천 번호를 생성했습니다.
-        `;
+        const recommendationText = `🌙 오늘은 음력 ${todayLunar.year}년 ${todayLunar.month}월 ${todayLunar.day}일 (${tenDay})입니다.
+${todayLunar.intercalation ? '(윤달)' : ''}
+과거 동일 조건 데이터를 분석하여 추천 번호를 생성했습니다.`;
 
-        document.getElementById('lunarRecommendation').innerHTML = recommendationText.replace(/\n/g, '<br>');
+        // 정보 패널 업데이트
+        const infoPanelElement = document.getElementById('lunarRecommendation');
+        if (infoPanelElement) {
+            infoPanelElement.innerHTML = recommendationText.split('\n').map(line => `<div>${line}</div>`).join('');
+        }
 
-        const lunarListElement = document.getElementById('lunarLottoList');
-        lunarListElement.innerHTML = '';
+        // 로또 결과 컨테이너 생성/업데이트
+        const resultsContainer = document.getElementById('lunarLottoResults');
+        if (resultsContainer) {
+            resultsContainer.innerHTML = '';
 
-        recommendedSets.forEach((numbers, index) => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `<strong>🌙 음력 추천 ${index + 1}번: <span class="lotto-number">${numbers.join(', ')}</span></strong>`;
-            lunarListElement.appendChild(listItem);
-        });
+            recommendedSets.forEach((numbers, index) => {
+                const winningContainer = document.createElement('div');
+                winningContainer.className = 'winning-numbers-container';
+                
+                const roundTitle = document.createElement('h3');
+                roundTitle.className = 'round-title';
+                roundTitle.textContent = `${index + 1}번 음력 추천`;
+                
+                const numbersGrid = document.createElement('div');
+                numbersGrid.className = 'numbers-grid';
+                
+                numbers.forEach((number, numberIndex) => {
+                    const numberBall = document.createElement('div');
+                    numberBall.className = 'number-ball';
+                    numberBall.textContent = number;
+                    numberBall.style.animationDelay = `${numberIndex * 0.1}s`;
+                    numbersGrid.appendChild(numberBall);
+                });
+                
+                winningContainer.appendChild(roundTitle);
+                winningContainer.appendChild(numbersGrid);
+                resultsContainer.appendChild(winningContainer);
+            });
+        }
 
         console.log('🔍 음력 패턴 분석 결과:', analysis);
     }
@@ -413,28 +448,75 @@ class MonthlyLottoAnalyzer {
     }
 
     /**
-     * 월별 분석 결과 표시
+     * 월별 분석 결과 표시 (모던 UI 버전)
      */
     displayMonthlyAnalysis(selectedMonth, analysis, customSets) {
-        const analysisText = `
-            📅 ${analysis.monthName} 분석 결과
-            • 총 ${analysis.totalDraws}회 추첨 데이터 분석
-            • 번호 합계 평균: ${analysis.averageSum}
-            • 구간별 출현 확률: 낮은구간(1-15) ${analysis.rangeProbability.low}%, 중간구간(16-30) ${analysis.rangeProbability.mid}%, 높은구간(31-45) ${analysis.rangeProbability.high}%
-            • 자주 나온 번호: ${analysis.hotNumbers.slice(0, 5).map(item => item.number).join(', ')}
-            • 적게 나온 번호: ${analysis.coldNumbers.slice(0, 5).map(item => item.number).join(', ')}
-        `;
+        // 분석 패널 업데이트
+        const analysisElement = document.getElementById('monthlyAnalysisResult');
+        if (analysisElement) {
+            const analysisHTML = `
+                <div>📅 <strong>${analysis.monthName}</strong> 분석 결과</div>
+                
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="label">총 추첨 횟수</div>
+                        <div class="value">${analysis.totalDraws}회</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">번호 합계 평균</div>
+                        <div class="value">${analysis.averageSum}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">낮은구간(1-15)</div>
+                        <div class="value">${analysis.rangeProbability.low}%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">중간구간(16-30)</div>
+                        <div class="value">${analysis.rangeProbability.mid}%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">높은구간(31-45)</div>
+                        <div class="value">${analysis.rangeProbability.high}%</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <div>• 자주 나온 번호: ${analysis.hotNumbers.slice(0, 5).map(item => item.number).join(', ')}</div>
+                    <div>• 적게 나온 번호: ${analysis.coldNumbers.slice(0, 5).map(item => item.number).join(', ')}</div>
+                </div>
+            `;
+            analysisElement.innerHTML = analysisHTML;
+        }
         
-        document.getElementById('monthlyAnalysisResult').innerHTML = analysisText.replace(/\n/g, '<br>');
-        
-        const monthlyListElement = document.getElementById('monthlyLottoList');
-        monthlyListElement.innerHTML = '';
-        
-        customSets.forEach((numbers, index) => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `<strong>📅 ${analysis.monthName} 맞춤 ${index + 1}번: <span class="lotto-number">${numbers.join(', ')}</span></strong>`;
-            monthlyListElement.appendChild(listItem);
-        });
+        // 로또 결과 컨테이너 생성/업데이트
+        const resultsContainer = document.getElementById('monthlyLottoResults');
+        if (resultsContainer) {
+            resultsContainer.innerHTML = '';
+
+            customSets.forEach((numbers, index) => {
+                const winningContainer = document.createElement('div');
+                winningContainer.className = 'winning-numbers-container';
+                
+                const roundTitle = document.createElement('h3');
+                roundTitle.className = 'round-title';
+                roundTitle.textContent = `${index + 1}번 ${analysis.monthName} 맞춤`;
+                
+                const numbersGrid = document.createElement('div');
+                numbersGrid.className = 'numbers-grid';
+                
+                numbers.forEach((number, numberIndex) => {
+                    const numberBall = document.createElement('div');
+                    numberBall.className = 'number-ball';
+                    numberBall.textContent = number;
+                    numberBall.style.animationDelay = `${numberIndex * 0.1}s`;
+                    numbersGrid.appendChild(numberBall);
+                });
+                
+                winningContainer.appendChild(roundTitle);
+                winningContainer.appendChild(numbersGrid);
+                resultsContainer.appendChild(winningContainer);
+            });
+        }
         
         console.log(`📊 ${analysis.monthName} 상세 분석:`, analysis);
     }
